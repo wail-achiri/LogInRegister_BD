@@ -1,28 +1,27 @@
 <?php
-    
-    function comprobacioErrors($error){
-      if(empty($_POST["username"])){
+    function comprobacioErrors($error,$username,$email,$nom,$cognom,$password,$clon_pwd){
+      if(empty($username)){
         array_push($error,"<b class='errors'>¡El camp <strong class='error'>usuari</strong> esta buit!</b>");
       }
-      if(empty($_POST["email"])){
+      if(empty($email)){
         array_push($error,"<b class='errors'>¡El camp <strong class='error'>correo</strong> esta buit!</b>");
       }
-      if(!filter_var($_POST["email"],FILTER_VALIDATE_EMAIL)){
+      if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
         array_push($error,"<b class='errors'>¡El correo <strong class='error'>no es valid!</strong></b>");
       }
-      if(empty($_POST["nom"])){
+      if(empty($nom)){
         array_push($error,"<b class='errors'>¡El camp <strong class='error'>nom</strong> esta buit!</b>");
       }
-      if(empty($_POST["cognom"])){
+      if(empty($cognom)){
         array_push($error,"<b class='errors'>¡El camp <strong class='error'>cognom</strong> esta buit!</b>");
       }
-      if(empty($_POST["contra"])){
+      if(empty($password)){
         array_push($error,"<b class='errors'>¡El camp <strong class='error'>contrasenya</strong> esta buit!</b>");
       }
-      if(empty($_POST["clon_pwd"])){
+      if(empty($clon_pwd)){
         array_push($error,"<b class='errors'>¡El camp repetir <strong class='error'>contrasenya</strong> esta buit!</b>");
       }
-      if($_POST["contra"]!=$_POST["clon_pwd"]){
+      if($password!=$clon_pwd){
         array_push($error,"<b class='errors'>¡Las contrasenyas <strong class='error'>no coincideixen!</strong></b>");
       }      
       return $error; //NOTE retornarem els errors que tinguem

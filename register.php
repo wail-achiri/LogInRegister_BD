@@ -5,16 +5,16 @@
     session_start();
     if(!isset($_SESSION['user']) || !isset($_SESSION['mail'])){
         if($_SERVER["REQUEST_METHOD"]=="POST"){
+            //NOTE filtrarem per si hi ha algún caracter especial
+            $username=filter_input(INPUT_POST,"username",FILTER_SANITIZE_SPECIAL_CHARS);
+            $email=filter_input(INPUT_POST,"email",FILTER_SANITIZE_SPECIAL_CHARS);
+            $nom=filter_input(INPUT_POST,"nom",FILTER_SANITIZE_SPECIAL_CHARS);
+            $cognom=filter_input(INPUT_POST,"cognom",FILTER_SANITIZE_SPECIAL_CHARS);
+            $password=filter_input(INPUT_POST,"contra",FILTER_SANITIZE_SPECIAL_CHARS);
+            $clon_pwd=filter_input(INPUT_POST,"clon_pwd",FILTER_SANITIZE_SPECIAL_CHARS);
             $errors = array();
-            $errors=comprobacioErrors($errors);
+            $errors=comprobacioErrors($errors,$username,$email,$nom,$cognom,$password,$clon_pwd);
             if(count($errors)==0){//NOTE mirem que no tinguem cap error
-                //NOTE filtrarem per si hi ha algún caracter especial
-                $username=filter_input(INPUT_POST,"username",FILTER_SANITIZE_SPECIAL_CHARS);
-                $email=filter_input(INPUT_POST,"email",FILTER_SANITIZE_SPECIAL_CHARS);
-                $nom=filter_input(INPUT_POST,"nom",FILTER_SANITIZE_SPECIAL_CHARS);
-                $cognom=filter_input(INPUT_POST,"cognom",FILTER_SANITIZE_SPECIAL_CHARS);
-                $password=filter_input(INPUT_POST,"contra",FILTER_SANITIZE_SPECIAL_CHARS);
-
                 $password = password_hash($password,PASSWORD_DEFAULT); //NOTE convertirem la contrasenya en hash
                 $lineas = consultarExisteix($username,$email,$db);
                 if($lineas){
@@ -32,7 +32,6 @@
     }else{
         header("Location:home.php");
     }
-   
 ?>
 <!DOCTYPE html>
 <html lang="ca">
