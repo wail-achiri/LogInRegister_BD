@@ -1,8 +1,9 @@
 <?php 
     require_once('./db/connecta_db.php');
-    require_once('./php/modal.php');
-    require_once('./php/funcions_register.php');
+    require_once('./lib/modal.php');
+    require_once('./lib/funcions.php');
     session_start();
+    $codi_hash = hash('sha256',rand());
     if(!isset($_SESSION['user']) || !isset($_SESSION['mail'])){
         if($_SERVER["REQUEST_METHOD"]=="POST"){
             //NOTE filtrarem per si hi ha algún caracter especial
@@ -20,9 +21,10 @@
                 if($lineas){
                     array_push($errors,"<b class='errors'>¡L'username o email ja <strong class='error'>estan registrats!</strong></b>");
                 }else{
-                    $inserit = consultaInserirRegistre($email,$username,$password,$nom,$cognom,$db);
+                    $inserit = consultaInserirRegistre($email,$username,$password,$nom,$cognom,$codi_hash,$db);
                     if($inserit){//NOTE si s'ha inserit correctament
-                        $ok=true; //NOTE variable que ens permetra mostra el modal
+                        $ok=true; //NOTE variable que ens permetra mostrar el modal
+                        require_once("./mail/mailsender.php");
                     }else{
                         array_push($errors,"<b class='errors'>¡No s'ha pogut registrar correctament!</b>");
                     }
@@ -58,17 +60,14 @@
       </div>
         <div class="login-container">
           <form class="form-register" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" >
-            <?php if(isset($errors)){ //NOTE mostrem els errors si en tenim
-              if(count($errors)!=0){
-                foreach($errors as $value){
-                  echo $value;
-                  echo "<br>";
-                }
+            <?php //NOTE mostrem els errors si en tenim
+              if(isset($errors)){
+                mostrarErrors($errors);
               }
-            }?>
+            ?>
             <ul class="nav">
               <li class="nav__item active">
-                <p>Registrat</p>
+                <p>Registrat</p> 
               </li>
             </ul>
             <label for="login-input-user" class="login__label">
@@ -103,7 +102,7 @@
     </body>
     <?php //NOTE si s'ha registrat correctament, mostrara el modal i activara el jquery
         if(isset($ok) && $ok){
-            echo $modal;
+            echo $modal_register;
             echo "<script src='./js/obrirModal.js'></script>";
         }
     ?>
